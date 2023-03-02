@@ -9,18 +9,6 @@
 </head>
 <body>
   
-  
-  <div id="puzzle_container">
-    <div class="puzzle_block">1</div>
-    <div class="puzzle_block">2</div>
-    <div class="puzzle_block">3</div>
-    <div class="puzzle_block">4</div>
-    <div class="puzzle_block">5</div>
-    <div class="puzzle_block">6</div>
-    <div class="puzzle_block">7</div>
-    <div class="puzzle_block">8</div>
-  </div>
-  
   <div class="puzzle_settings">
     <div class="puzzle_settings_input">
       <label class="input_label" for="columnInput">
@@ -35,7 +23,17 @@
       </label>
       <input id="rowInput" name="rows" type="range" min="3" max="40" value="3">
     </div>
+
+    <div class="puzzle_settings_input">
+      <label class="input_label" for="blockSizeInput">
+        Block Size: <span id="blockSizeValue"></span>
+      </label>
+      <input id="blockSizeInput" name="blockSize" type="range" min="50" max="150" value="50">
+    </div>
   </div>
+  
+  <div id="puzzle_container"></div>
+  
 
   <script src="app.js"></script>
 </body>

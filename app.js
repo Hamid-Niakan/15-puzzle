@@ -1,6 +1,6 @@
 // game
 class Game {
-  difficulties = [50, 70];
+  difficulties = [50, 70, 90];
   blocks = [];
   indexes = [];
   emptyBlockCoords = [];
@@ -110,7 +110,7 @@ class Game {
   }
 }
 
-let game = new Game(3, 3, 50);
+let game = new Game(5, 5, 50);
 
 // input range
 class RangeInput {
@@ -127,8 +127,8 @@ class RangeInput {
   }
 }
 
-const columnInput = new RangeInput("#columnInput", "#columnValue", "3");
-const rowInput = new RangeInput("#rowInput", "#rowValue", "3");
+const columnInput = new RangeInput("#columnInput", "#columnValue", "5");
+const rowInput = new RangeInput("#rowInput", "#rowValue", "5");
 const blockSizeInput = new RangeInput(
   "#blockSizeInput",
   "#blockSizeValue",

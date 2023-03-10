@@ -7,16 +7,21 @@ class Game {
   whiteColor = "#f2e9e4";
   blackColor = "#22223b";
   blockSize = 60;
+  startTime = null;
+  currentTimeElm = null;
 
   constructor(cols, rows, difficulty) {
     this.cols = cols;
     this.rows = rows;
     this.count = cols * rows;
     this.difficulty = difficulty;
+    this.intervalId = null;
     this.init();
   }
 
   init() {
+    this.currentTimeElm = document.getElementById("times_current");
+    this.currentTimeElm.innerHTML = "0.0";
     const puzzleContainer = document.getElementById("puzzle_container");
     const allowedWidth = window.innerWidth - 100;
     const allowedHeight = window.innerHeight - 200;
@@ -70,8 +75,16 @@ class Game {
   }
 
   onClickOnBlock(blockIndex) {
+    if (!this.intervalId) {
+      this.startTime = Date.now();
+      this.intervalId = setInterval(() => {
+        const elapsedTime = Date.now() - this.startTime;
+        this.currentTimeElm.innerHTML = (elapsedTime / 1000).toFixed(2);
+      }, 100);
+    }
     if (this.moveBlock(blockIndex)) {
       if (this.checkPuzzleSolved()) {
+        clearInterval(this.intervalId);
         setTimeout(() => alert("Puzzle Solved!!"), 300);
       }
     }
@@ -82,10 +95,10 @@ class Game {
       if (i === this.emptyBlockCoords[0] + this.emptyBlockCoords[1] * this.cols)
         continue;
       if (this.indexes[i] !== i) {
-        this.blocks[i].style.color = this.whiteColor;
+        if (this.blocks[i]) this.blocks[i].style.color = this.whiteColor;
         return false;
       } else {
-        this.blocks[i].style.color = this.blackColor;
+        if (this.blocks[i]) this.blocks[i].style.color = this.blackColor;
       }
     }
     return true;
@@ -160,14 +173,17 @@ const difficultyInput = new RangeInput(
 );
 
 columnInput.input.addEventListener("change", (e) => {
+  clearInterval(game.intervalId);
   game = new Game(Number(columnInput.input.value), game.rows, game.difficulty);
 });
 
 rowInput.input.addEventListener("change", (e) => {
+  clearInterval(game.intervalId);
   game = new Game(game.cols, Number(rowInput.input.value), game.difficulty);
 });
 
 difficultyInput.input.addEventListener("change", (e) => {
+  clearInterval(game.intervalId);
   game = new Game(game.cols, game.rows, Number(difficultyInput.input.value));
 });
 
@@ -195,6 +211,7 @@ new Button("btnCloseSetting", () => {
 });
 
 new Button("btnRestart", () => {
+  clearInterval(game.intervalId);
   game = new Game(game.cols, game.rows, game.difficulty);
 });
 

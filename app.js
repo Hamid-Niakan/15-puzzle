@@ -9,6 +9,8 @@ class Game {
   blockSize = 60;
   startTime = null;
   currentTimeElm = null;
+  records = null;
+  gameMode = '';
 
   constructor(cols, rows, difficulty) {
     this.cols = cols;
@@ -22,6 +24,11 @@ class Game {
   init() {
     this.currentTimeElm = document.getElementById("times_current");
     this.currentTimeElm.innerHTML = "0.0";
+    this.records = JSON.parse(localStorage.getItem('records') || "[]");
+    this.gameMode = `${this.cols}${this.rows}${this.difficulty}`;
+    const recordItem = this.records.find((x) => x[0] === this.gameMode)
+    const recordTime = recordItem ? recordItem[1] : '0.0';
+    document.getElementById('times_best').innerHTML = recordTime;
     const puzzleContainer = document.getElementById("puzzle_container");
     const allowedWidth = window.innerWidth - 100;
     const allowedHeight = window.innerHeight - 200;
@@ -85,6 +92,18 @@ class Game {
     if (this.moveBlock(blockIndex)) {
       if (this.checkPuzzleSolved()) {
         clearInterval(this.intervalId);
+        const recordTime = this.currentTimeElm.innerHTML;
+        const index = this.records.findIndex((x) => x[0] === this.gameMode);
+        if (index !== -1) {
+          const lastRecordTime = this.records[index][1];
+          if (parseFloat(lastRecordTime) > parseFloat(recordTime)) {
+            this.records.splice(index, 1);
+            this.records.push([this.gameMode, recordTime]);
+          }
+        } else {
+          this.records.push([this.gameMode, recordTime]);
+        }
+        localStorage.setItem('records', JSON.stringify(this.records));
         setTimeout(() => alert("Puzzle Solved!!"), 300);
       }
     }

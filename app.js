@@ -153,11 +153,6 @@ class RangeInput {
 
 const columnInput = new RangeInput("#columnInput", "#columnValue", "5");
 const rowInput = new RangeInput("#rowInput", "#rowValue", "5");
-// const blockSizeInput = new RangeInput(
-//   "#blockSizeInput",
-//   "#blockSizeValue",
-//   "50"
-// );
 const difficultyInput = new RangeInput(
   "#difficultyInput",
   "#difficultyValue",
@@ -171,15 +166,6 @@ columnInput.input.addEventListener("change", (e) => {
 rowInput.input.addEventListener("change", (e) => {
   game = new Game(game.cols, Number(rowInput.input.value), game.difficulty);
 });
-
-// blockSizeInput.input.addEventListener("change", (e) => {
-//   game = new Game(
-//     game.cols,
-//     game.rows,
-//     Number(blockSizeInput.input.value),
-//     game.difficulty
-//   );
-// });
 
 difficultyInput.input.addEventListener("change", (e) => {
   game = new Game(game.cols, game.rows, Number(difficultyInput.input.value));

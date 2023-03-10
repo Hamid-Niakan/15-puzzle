@@ -18,20 +18,20 @@ class Game {
 
   init() {
     const puzzleContainer = document.getElementById("puzzle_container");
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const allowedWidth = window.innerWidth - 100;
+    const allowedHeight = window.innerHeight - 200;
     const totalWidth = this.blockSize * this.cols;
     const totalHeight = this.blockSize * this.rows;
     const containerStyle = puzzleContainer.style;
-    if (totalWidth < windowWidth && totalHeight < windowHeight) {
+    if (totalWidth < allowedWidth && totalHeight < allowedHeight) {
       containerStyle.width = totalWidth + "px";
       containerStyle.height = totalHeight + "px";
     } else {
-      const blockSizeByWidth = Math.floor((windowWidth - 20) / this.cols);
-      if (blockSizeByWidth * this.rows < windowHeight) {
+      const blockSizeByWidth = Math.floor(allowedWidth / this.cols);
+      if (blockSizeByWidth * this.rows < allowedHeight) {
         this.blockSize = blockSizeByWidth;
       } else {
-        this.blockSize = Math.floor((windowHeight - 20) / this.rows);
+        this.blockSize = Math.floor(allowedHeight / this.rows);
       }
       containerStyle.width = this.blockSize * this.cols + "px";
       containerStyle.height = this.blockSize * this.rows + "px";

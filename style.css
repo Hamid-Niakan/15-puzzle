@@ -28,7 +28,7 @@ body{
     border-radius:8px;
     border:1px solid var(--color-1);
     box-shadow:0px 8px 0px var(--color-1);
-    margin: 0 auto;
+    margin: 12px auto;
 }
 
 .puzzle_block{

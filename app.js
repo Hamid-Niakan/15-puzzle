@@ -195,7 +195,7 @@ new Button("btnCloseSetting", () => {
 });
 
 new Button("btnRestart", () => {
-  game = new Game(game.cols, game.rows, game.blockSize, game.difficulty);
+  game = new Game(game.cols, game.rows, game.difficulty);
 });
 
 new Button("btnHowTo", () => {

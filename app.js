@@ -4,13 +4,13 @@ class Game {
   blocks = [];
   indexes = [];
   emptyBlockCoords = [];
-  whiteColor = '#f2e9e4';
-  blackColor = '#22223b';
+  whiteColor = "#f2e9e4";
+  blackColor = "#22223b";
+  blockSize = 60;
 
-  constructor(cols, rows, blockSize, difficulty) {
+  constructor(cols, rows, difficulty) {
     this.cols = cols;
     this.rows = rows;
-    this.blockSize = blockSize;
     this.count = cols * rows;
     this.difficulty = difficulty;
     this.init();
@@ -18,8 +18,24 @@ class Game {
 
   init() {
     const puzzleContainer = document.getElementById("puzzle_container");
-    puzzleContainer.style.width = this.blockSize * this.cols + "px";
-    puzzleContainer.style.height = this.blockSize * this.rows + "px";
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const totalWidth = this.blockSize * this.cols;
+    const totalHeight = this.blockSize * this.rows;
+    const containerStyle = puzzleContainer.style;
+    if (totalWidth < windowWidth && totalHeight < windowHeight) {
+      containerStyle.width = totalWidth + "px";
+      containerStyle.height = totalHeight + "px";
+    } else {
+      const blockSizeByWidth = Math.floor((windowWidth - 20) / this.cols);
+      if (blockSizeByWidth * this.rows < windowHeight) {
+        this.blockSize = blockSizeByWidth;
+      } else {
+        this.blockSize = Math.floor((windowHeight - 20) / this.rows);
+      }
+      containerStyle.width = this.blockSize * this.cols + "px";
+      containerStyle.height = this.blockSize * this.rows + "px";
+    }
     while (puzzleContainer.firstChild) {
       puzzleContainer.removeChild(puzzleContainer.firstChild);
     }
@@ -118,7 +134,7 @@ class Game {
   }
 }
 
-let game = new Game(5, 5, 50, 2);
+let game = new Game(5, 5, 2);
 
 // input range
 class RangeInput {
@@ -137,11 +153,11 @@ class RangeInput {
 
 const columnInput = new RangeInput("#columnInput", "#columnValue", "5");
 const rowInput = new RangeInput("#rowInput", "#rowValue", "5");
-const blockSizeInput = new RangeInput(
-  "#blockSizeInput",
-  "#blockSizeValue",
-  "50"
-);
+// const blockSizeInput = new RangeInput(
+//   "#blockSizeInput",
+//   "#blockSizeValue",
+//   "50"
+// );
 const difficultyInput = new RangeInput(
   "#difficultyInput",
   "#difficultyValue",
@@ -149,72 +165,58 @@ const difficultyInput = new RangeInput(
 );
 
 columnInput.input.addEventListener("change", (e) => {
-  game = new Game(
-    Number(columnInput.input.value),
-    game.rows,
-    game.blockSize,
-    game.difficulty
-  );
+  game = new Game(Number(columnInput.input.value), game.rows, game.difficulty);
 });
 
 rowInput.input.addEventListener("change", (e) => {
-  game = new Game(
-    game.cols,
-    Number(rowInput.input.value),
-    game.blockSize,
-    game.difficulty
-  );
+  game = new Game(game.cols, Number(rowInput.input.value), game.difficulty);
 });
 
-blockSizeInput.input.addEventListener("change", (e) => {
-  game = new Game(
-    game.cols,
-    game.rows,
-    Number(blockSizeInput.input.value),
-    game.difficulty
-  );
-});
+// blockSizeInput.input.addEventListener("change", (e) => {
+//   game = new Game(
+//     game.cols,
+//     game.rows,
+//     Number(blockSizeInput.input.value),
+//     game.difficulty
+//   );
+// });
 
 difficultyInput.input.addEventListener("change", (e) => {
-  game = new Game(
-    game.cols,
-    game.rows,
-    game.blockSize,
-    Number(difficultyInput.input.value)
-  );
+  game = new Game(game.cols, game.rows, Number(difficultyInput.input.value));
 });
 
 // buttons
 class Button {
   constructor(btnId, action) {
     const btn = document.getElementById(btnId);
-    btn.addEventListener('click', action);
+    btn.addEventListener("click", action);
   }
 }
 
 const toggleVisibility = (querySelector, state) => {
   const elmStyle = document.querySelector(querySelector).style;
-  elmStyle.visibility = state || elmStyle.visibility === 'visible' ? 'hidden' : 'visible';
-}
+  elmStyle.visibility =
+    state || elmStyle.visibility === "visible" ? "hidden" : "visible";
+};
 
-new Button('btnSettings', () => {
-  toggleVisibility('.how-to-play', 'hidden');
-  toggleVisibility('.puzzle_settings');
+new Button("btnSettings", () => {
+  toggleVisibility(".how-to-play", "hidden");
+  toggleVisibility(".puzzle_settings");
 });
 
-new Button('btnCloseSetting', () => {
-  toggleVisibility('.puzzle_settings');
+new Button("btnCloseSetting", () => {
+  toggleVisibility(".puzzle_settings");
 });
 
-new Button('btnRestart', () => {
+new Button("btnRestart", () => {
   game = new Game(game.cols, game.rows, game.blockSize, game.difficulty);
 });
 
-new Button('btnHowTo', () => {
-  toggleVisibility('.puzzle_settings', 'hidden');
-  toggleVisibility('.how-to-play');
+new Button("btnHowTo", () => {
+  toggleVisibility(".puzzle_settings", "hidden");
+  toggleVisibility(".how-to-play");
 });
 
-new Button('btnCloseHowTo', () => {
-  toggleVisibility('.how-to-play');
+new Button("btnCloseHowTo", () => {
+  toggleVisibility(".how-to-play");
 });

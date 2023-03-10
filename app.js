@@ -1,15 +1,18 @@
 // game
 class Game {
-  difficulties = [50, 70, 90];
+  difficulties = [50, 200, 800];
   blocks = [];
   indexes = [];
   emptyBlockCoords = [];
+  whiteColor = '#f2e9e4';
+  blackColor = '#22223b';
 
-  constructor(cols, rows, blockSize) {
+  constructor(cols, rows, blockSize, difficulty) {
     this.cols = cols;
     this.rows = rows;
     this.blockSize = blockSize;
     this.count = cols * rows;
+    this.difficulty = difficulty;
     this.init();
   }
 
@@ -62,7 +65,12 @@ class Game {
     for (let i = 0; i < this.indexes.length; i++) {
       if (i === this.emptyBlockCoords[0] + this.emptyBlockCoords[1] * this.cols)
         continue;
-      if (this.indexes[i] !== i) return false;
+      if (this.indexes[i] !== i) {
+        this.blocks[i].style.color = this.whiteColor;
+        return false;
+      } else {
+        this.blocks[i].style.color = this.blackColor;
+      }
     }
     return true;
   }
@@ -101,7 +109,7 @@ class Game {
   }
 
   randomize() {
-    const iterationCount = this.difficulties[Math.floor(Math.random() * 3)];
+    const iterationCount = this.difficulties[this.difficulty - 1];
     for (let i = 0; i < iterationCount; i++) {
       const randomBlockIndex = Math.floor(Math.random() * (this.count - 1));
       const moved = this.moveBlock(randomBlockIndex);
@@ -110,7 +118,7 @@ class Game {
   }
 }
 
-let game = new Game(5, 5, 50);
+let game = new Game(5, 5, 50, 2);
 
 // input range
 class RangeInput {
@@ -134,15 +142,79 @@ const blockSizeInput = new RangeInput(
   "#blockSizeValue",
   "50"
 );
+const difficultyInput = new RangeInput(
+  "#difficultyInput",
+  "#difficultyValue",
+  "2"
+);
 
 columnInput.input.addEventListener("change", (e) => {
-  game = new Game(Number(columnInput.input.value), game.rows, game.blockSize);
+  game = new Game(
+    Number(columnInput.input.value),
+    game.rows,
+    game.blockSize,
+    game.difficulty
+  );
 });
 
 rowInput.input.addEventListener("change", (e) => {
-  game = new Game(game.cols, Number(rowInput.input.value), game.blockSize);
+  game = new Game(
+    game.cols,
+    Number(rowInput.input.value),
+    game.blockSize,
+    game.difficulty
+  );
 });
 
-blockSizeInput.input.addEventListener('change', (e) => {
-  game = new Game(game.cols, game.rows, Number(blockSizeInput.input.value));
-})
+blockSizeInput.input.addEventListener("change", (e) => {
+  game = new Game(
+    game.cols,
+    game.rows,
+    Number(blockSizeInput.input.value),
+    game.difficulty
+  );
+});
+
+difficultyInput.input.addEventListener("change", (e) => {
+  game = new Game(
+    game.cols,
+    game.rows,
+    game.blockSize,
+    Number(difficultyInput.input.value)
+  );
+});
+
+// buttons
+class Button {
+  constructor(btnId, action) {
+    const btn = document.getElementById(btnId);
+    btn.addEventListener('click', action);
+  }
+}
+
+const toggleVisibility = (querySelector, state) => {
+  const elmStyle = document.querySelector(querySelector).style;
+  elmStyle.visibility = state || elmStyle.visibility === 'visible' ? 'hidden' : 'visible';
+}
+
+new Button('btnSettings', () => {
+  toggleVisibility('.how-to-play', 'hidden');
+  toggleVisibility('.puzzle_settings');
+});
+
+new Button('btnCloseSetting', () => {
+  toggleVisibility('.puzzle_settings');
+});
+
+new Button('btnRestart', () => {
+  game = new Game(game.cols, game.rows, game.blockSize, game.difficulty);
+});
+
+new Button('btnHowTo', () => {
+  toggleVisibility('.puzzle_settings', 'hidden');
+  toggleVisibility('.how-to-play');
+});
+
+new Button('btnCloseHowTo', () => {
+  toggleVisibility('.how-to-play');
+});
